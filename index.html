@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SunoDL - High-Quality Suno AI Downloader</title>
+    <meta name="description" content="Easily download your favorite Suno AI songs in high quality MP3 format. Just paste the link and download.">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap');
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #0a0a0a;
+            color: #ffffff;
+        }
+        .neon-glow {
+            box-shadow: 0 0 15px rgba(139, 92, 246, 0.4);
+        }
+        .neon-text {
+            text-shadow: 0 0 10px rgba(139, 92, 246, 0.6);
+        }
+        .glass-card {
+            background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        .animate-pulse-slow {
+            animation: pulse 4s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+        }
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col">
+
+    <!-- Navigation -->
+    <nav class="px-6 py-4 flex justify-between items-center border-b border-white/10">
+        <div class="flex items-center gap-2">
+            <div class="w-8 h-8 bg-violet-600 rounded-lg flex items-center justify-center neon-glow">
+                <img src="https://api.iconify.design/material-symbols/music-note-rounded.svg?color=white" class="w-6 h-6" alt="Logo" />
+            </div>
+            <span class="font-bold text-xl tracking-tight">Suno<span class="text-violet-500">DL</span></span>
+        </div>
+        <div class="hidden md:flex gap-8 text-sm font-medium text-gray-400">
+            <a href="#how-to" class="hover:text-white transition-colors">How to Use</a>
+            <a href="#faq" class="hover:text-white transition-colors">FAQ</a>
+            <a href="#" class="hover:text-white transition-colors">Support</a>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <main class="flex-grow flex flex-col items-center justify-center px-4 py-20">
+        <div class="max-w-3xl w-full text-center mb-12">
+            <h1 class="text-4xl md:text-6xl font-extrabold mb-6 bg-gradient-to-r from-white via-violet-200 to-violet-500 bg-clip-text text-transparent">
+                Download Your Suno AI Creations
+            </h1>
+            <p class="text-gray-400 text-lg md:text-xl">
+                Fast, free, and high-quality MP3 downloads for your Suno AI songs.
+            </p>
+        </div>
+
+        <!-- Downloader Component -->
+        <div class="w-full max-w-2xl glass-card rounded-3xl p-6 md:p-10 neon-glow">
+            <div class="flex flex-col gap-4">
+                <div class="relative">
+                    <input 
+                        id="sunoLink" 
+                        type="text" 
+                        placeholder="https://suno.com/song/..." 
+                        class="w-full bg-black/40 border border-white/20 rounded-2xl py-4 px-6 text-white placeholder-gray-500 focus:outline-none focus:border-violet-500 focus:ring-1 focus:ring-violet-500 transition-all text-lg"
+                    />
+                </div>
+                <button 
+                    onclick="processDownload()" 
+                    id="dlBtn"
+                    class="bg-violet-600 hover:bg-violet-500 text-white font-bold py-4 px-8 rounded-2xl transition-all flex items-center justify-center gap-3 active:scale-95"
+                >
+                    <img src="https://api.iconify.design/material-symbols/download-rounded.svg?color=white" class="w-6 h-6" />
+                    Get Download Link
+                </button>
+            </div>
+
+            <!-- Loading/Result State (Hidden by default) -->
+            <div id="resultArea" class="mt-8 hidden animate-in fade-in slide-in-from-top-4 duration-500">
+                <div id="loader" class="flex flex-col items-center gap-4 py-4">
+                    <div class="w-10 h-10 border-4 border-violet-500/20 border-t-violet-500 rounded-full animate-spin"></div>
+                    <p class="text-gray-400 animate-pulse-slow">Analyzing track details...</p>
+                </div>
+                
+                <div id="downloadCard" class="hidden flex flex-col md:flex-row items-center gap-6 p-4 bg-white/5 rounded-2xl border border-white/10">
+                    <img id="songThumb" src="https://picsum.photos/200" class="w-24 h-24 rounded-xl object-cover" />
+                    <div class="flex-grow text-center md:text-left">
+                        <h3 id="songTitle" class="font-bold text-lg">Melodic Dreamscape</h3>
+                        <p class="text-gray-400 text-sm mb-4">Format: MP3 | Quality: 320kbps</p>
+                        <a id="finalDownload" href="#" download class="bg-white text-black font-bold py-2 px-6 rounded-lg hover:bg-gray-200 transition-colors inline-flex items-center gap-2">
+                            Download File
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- How to Use Section -->
+    <section id="how-to" class="py-20 px-6 bg-zinc-950">
+        <div class="max-w-6xl mx-auto">
+            <div class="text-center mb-16">
+                <h2 class="text-3xl font-bold mb-4">How it works</h2>
+                <div class="h-1 w-20 bg-violet-600 mx-auto rounded-full"></div>
+            </div>
+            <div class="grid md:grid-row-3 gap-8">
+                <div class="flex items-start gap-6 glass-card p-6 rounded-2xl">
+                    <span class="text-4xl font-black text-violet-500/30">01</span>
+                    <div>
+                        <h4 class="text-xl font-bold mb-2">Copy Link</h4>
+                        <p class="text-gray-400">Go to Suno AI, click on the three dots or share button, and copy the song link.</p>
+                    </div>
+                </div>
+                <div class="flex items-start gap-6 glass-card p-6 rounded-2xl">
+                    <span class="text-4xl font-black text-violet-500/30">02</span>
+                    <div>
+                        <h4 class="text-xl font-bold mb-2">Paste & Process</h4>
+                        <p class="text-gray-400">Paste the URL into the input field above and click the "Get Download Link" button.</p>
+                    </div>
+                </div>
+                <div class="flex items-start gap-6 glass-card p-6 rounded-2xl">
+                    <span class="text-4xl font-black text-violet-500/30">03</span>
+                    <div>
+                        <h4 class="text-xl font-bold mb-2">Download MP3</h4>
+                        <p class="text-gray-400">Your song will be ready in seconds. Click download to save it to your device forever.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- FAQ Section -->
+    <section id="faq" class="py-20 px-6">
+        <div class="max-w-3xl mx-auto">
+            <div class="text-center mb-16">
+                <h2 class="text-3xl font-bold mb-4">Frequently Asked Questions</h2>
+            </div>
+            <div class="space-y-6">
+                <details class="glass-card p-6 rounded-2xl group cursor-pointer">
+                    <summary class="font-semibold list-none flex justify-between items-center">
+                        Is this service free to use?
+                        <img src="https://api.iconify.design/material-symbols/keyboard-arrow-down-rounded.svg?color=gray" class="w-6 h-6 transition-transform group-open:rotate-180" />
+                    </summary>
+                    <p class="mt-4 text-gray-400 leading-relaxed">
+                        Yes! SunoDL is 100% free. You can download as many songs as you want without any restrictions or subscriptions.
+                    </p>
+                </details>
+                <details class="glass-card p-6 rounded-2xl group cursor-pointer">
+                    <summary class="font-semibold list-none flex justify-between items-center">
+                        What file formats are supported?
+                        <img src="https://api.iconify.design/material-symbols/keyboard-arrow-down-rounded.svg?color=gray" class="w-6 h-6 transition-transform group-open:rotate-180" />
+                    </summary>
+                    <p class="mt-4 text-gray-400 leading-relaxed">
+                        We currently provide downloads in high-quality MP3 format (320kbps), which is compatible with all devices and players.
+                    </p>
+                </details>
+                <details class="glass-card p-6 rounded-2xl group cursor-pointer">
+                    <summary class="font-semibold list-none flex justify-between items-center">
+                        Do I need an account to download?
+                        <img src="https://api.iconify.design/material-symbols/keyboard-arrow-down-rounded.svg?color=gray" class="w-6 h-6 transition-transform group-open:rotate-180" />
+                    </summary>
+                    <p class="mt-4 text-gray-400 leading-relaxed">
+                        No account creation is required. We respect your privacy and don't store your personal data or browsing history.
+                    </p>
+                </details>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="py-10 px-6 border-t border-white/10 bg-black">
+        <div class="max-w-6xl mx-auto flex flex-col md:flex-row justify-between items-center gap-8">
+            <div class="flex items-center gap-2">
+                <div class="w-6 h-6 bg-violet-600 rounded flex items-center justify-center">
+                    <img src="https://api.iconify.design/material-symbols/music-note-rounded.svg?color=white" class="w-4 h-4" />
+                </div>
+                <span class="font-bold tracking-tight">SunoDL</span>
+            </div>
+            <div class="text-gray-500 text-sm">
+                &copy; 2026 SunoDL. Not affiliated with Suno AI.
+            </div>
+            <div class="flex gap-4">
+                <a href="#" class="w-8 h-8 flex items-center justify-center rounded-full hover:bg-white/10 transition-colors">
+                    <img src="https://api.iconify.design/fa6-brands/twitter.svg?color=gray" class="w-4 h-4" />
+                </a>
+                <a href="#" class="w-8 h-8 flex items-center justify-center rounded-full hover:bg-white/10 transition-colors">
+                    <img src="https://api.iconify.design/fa6-brands/github.svg?color=gray" class="w-4 h-4" />
+                </a>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        function processDownload() {
+            var linkInput = document.getElementById('sunoLink');
+            var resultArea = document.getElementById('resultArea');
+            var loader = document.getElementById('loader');
+            var downloadCard = document.getElementById('downloadCard');
+            var dlBtn = document.getElementById('dlBtn');
+
+            if (!linkInput.value.trim()) {
+                alert('Please paste a valid Suno AI link first!');
+                return;
+            }
+
+            // Reset UI
+            resultArea.classList.remove('hidden');
+            loader.classList.remove('hidden');
+            downloadCard.classList.add('hidden');
+            dlBtn.disabled = true;
+            dlBtn.innerText = 'Processing...';
+
+            // Simulate API fetching delay
+            setTimeout(function() {
+                loader.classList.add('hidden');
+                downloadCard.classList.remove('hidden');
+                
+                // Mock dynamic data based on input or placeholders
+                var mockTitles = ["Neon City Dreams", "Cyberpunk Echoes", "Lofi Summer Nights", "Heavy Metal Thunder"];
+                var randomTitle = mockTitles[Math.floor(Math.random() * mockTitles.length)];
+                
+                document.getElementById('songTitle').innerText = randomTitle;
+                document.getElementById('songThumb').src = 'https://picsum.photos/200?random=' + Math.random();
+                
+                dlBtn.disabled = false;
+                dlBtn.innerHTML = '<img src="https://api.iconify.design/material-symbols/download-rounded.svg?color=white" class="w-6 h-6" /> Get Download Link';
+                
+                // Smooth scroll to result
+                downloadCard.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            }, 2000);
+        }
+    </script>
+</body>
+</html>
